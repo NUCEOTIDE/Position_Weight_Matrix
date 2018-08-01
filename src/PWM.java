@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class PWM {
     private String targetSeq;
     private String[] dataBase;
@@ -7,8 +5,7 @@ public class PWM {
     private float[][] positionWeight_matrix;
     private float[] target_score;
 
-    private String syallbus;
-    private int high_index;
+    private String syllabus;
     private String output;
 
     private float e;
@@ -26,15 +23,13 @@ public class PWM {
         dataBase[6]="ACCAGCAAA";
         dataBase[7]="AGGGTTTAT";
 
-        syallbus="ACTG";
-
-        high_index=0;
+        syllabus ="ACTG";
         output="";
 
         e=0;
 
-        positionCount_matrix=new int[syallbus.length()][dataBase[0].length()];
-        positionWeight_matrix=new float[syallbus.length()][dataBase[0].length()];
+        positionCount_matrix=new int[syllabus.length()][dataBase[0].length()];
+        positionWeight_matrix=new float[syllabus.length()][dataBase[0].length()];
         target_score=new float[targetSeq.length()];
     }
     public void calculation(){
@@ -45,12 +40,12 @@ public class PWM {
     }
 
     private void positionCount_matrix_generation(){
-        for(int i=0;i<syallbus.length();i++){
+        for(int i = 0; i< syllabus.length(); i++){
             for(int j=0;j<dataBase[0].length();j++){
                 int count=0;
                 for(int k=0;k<dataBase.length;k++){
                     char temp_syllabuts=dataBase[k].charAt(j);
-                    if(temp_syllabuts==syallbus.charAt(i))
+                    if(temp_syllabuts== syllabus.charAt(i))
                         count++;
                 }
                 positionCount_matrix[i][j]=count;
@@ -65,12 +60,14 @@ public class PWM {
     }
     private void matching(){
         for(int i=0;i<targetSeq.length();i++){
-            int count=0;
-            for(int j=i;;j++){
+            float count=0;
+            for(int k=0;k<syllabus.length();k++)
+                if(syllabus.charAt(k)==targetSeq.charAt(i)) count+=positionWeight_matrix[k][0];
+            for(int j=i+1;;j++){
                 if(j<targetSeq.length()&&j<i+dataBase[0].length()){
                     char target_character=targetSeq.charAt(j);
-                    for(int k=0;k<syallbus.length();k++)
-                        if(syallbus.charAt(k) == target_character) count+=positionWeight_matrix[k][j-i];
+                    for(int k=0;k<syllabus.length();k++)
+                        if(syllabus.charAt(k)==target_character) count*=positionWeight_matrix[k][j-i];
                 }
                 else break;
             }
