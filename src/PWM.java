@@ -26,7 +26,7 @@ public class PWM {
         syllabus ="ACTG";
         output="";
 
-        e=0;
+        e=(float)0.001;
 
         positionCount_matrix=new int[syllabus.length()][dataBase[0].length()];
         positionWeight_matrix=new float[syllabus.length()][dataBase[0].length()];
@@ -56,10 +56,11 @@ public class PWM {
     private void positionWeight_matrix_generation(){
         for(int i=0;i<positionCount_matrix.length;i++)
             for(int j=0;j<positionCount_matrix[0].length;j++)
-                positionWeight_matrix[i][j]=(positionCount_matrix[i][j]/(dataBase.length))+e;
+                //System.out.println(positionCount_matrix[i][j]+"/"+dataBase.length);
+                positionWeight_matrix[i][j]=(float)positionCount_matrix[i][j]/(dataBase.length)+e;
     }
     private void matching(){
-        for(int i=0;i<targetSeq.length();i++){
+        for(int i=0;i<targetSeq.length()-9;i++){
             float count=0;
             for(int k=0;k<syllabus.length();k++)
                 if(syllabus.charAt(k)==targetSeq.charAt(i)) count+=positionWeight_matrix[k][0];
@@ -73,19 +74,43 @@ public class PWM {
             }
             target_score[i]=count;
         }
-
     }
+
     private void answer_outputting(){
         float temp=target_score[0];
         int index=0;
-        for(int i=0;i<targetSeq.length();i++)
+        for(int i=0;i<targetSeq.length();i++){
+            System.out.print(target_score[i]+" ");
             if(target_score[i]>temp){
                 index=i;
                 temp=target_score[i];
             }
-        for(int j=index;j<dataBase[0].length()+temp;j++)
+        }
+        System.out.println();
+        int count=0;
+        for(int j=index;j<targetSeq.length();j++){
+            if(count==8) break;
             output+=targetSeq.substring(j,j+1);
-        System.out.println(output);
+            count++;
+        }
+        System.out.println("start point: "+index);
+        System.out.println("answer string: "+output);
         System.out.println("score: "+target_score[index]);
+    }
+
+    public void getPositonWeight_matrix(){
+        for(int i=0;i<positionWeight_matrix.length;i++){
+            for(int j=0;j<positionWeight_matrix[0].length;j++)
+                System.out.print(positionWeight_matrix[i][j]+" ");
+            System.out.println();
+        }
+    }
+
+    public void getPositionCount_matrix(){
+        for(int i=0;i<positionCount_matrix.length;i++){
+            for(int j=0;j<positionCount_matrix[0].length;j++)
+                System.out.print(positionCount_matrix[i][j]+" ");
+            System.out.println();
+        }
     }
 }
